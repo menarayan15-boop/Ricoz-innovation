@@ -51,8 +51,11 @@ export const createApp = (): Express => {
   // Base API v1 Routing
   app.use('/api/v1', routes);
 
-  // Root Welcome route
-  app.get('/', (req, res) => {
+  // Root Routing (fallback for serverless gateways that strip /api/v1 prefix)
+  app.use('/', routes);
+
+  // Root Welcome route & diagnostic
+  app.get(['/', '/api', '/api/index'], (req, res) => {
     res.status(200).json({
       name: 'Immigration & Work Visa Dossier Builder API',
       version: '1.0.0',

@@ -648,8 +648,8 @@ function EvidenceIntelligenceContent() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Documents Analyzed */}
         <Card padding="none" className="border-slate-200 shadow-sm bg-white overflow-hidden">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex-1 min-w-0 pr-3">
+          <div className="p-4 flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider truncate">
                 Documents Analyzed
               </p>
@@ -662,16 +662,16 @@ function EvidenceIntelligenceContent() {
                   : `${availableDocs.length} uploaded exhibit${availableDocs.length === 1 ? '' : 's'}`}
               </p>
             </div>
-            <div className="p-3 bg-blue-50 text-blue-700 rounded-lg flex-shrink-0">
+            <div className="p-3 bg-blue-50 text-blue-700 rounded-lg shrink-0 flex items-center justify-center self-center">
               <FileText className="w-6 h-6" />
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Metric 2: Potential Issues */}
         <Card padding="none" className="border-slate-200 shadow-sm bg-white overflow-hidden">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex-1 min-w-0 pr-3">
+          <div className="p-4 flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider truncate">
                 Potential Issues Flagged
               </p>
@@ -687,16 +687,16 @@ function EvidenceIntelligenceContent() {
                 {findings.filter((f) => f.reviewStatus === 'awaiting_review').length} awaiting review
               </p>
             </div>
-            <div className="p-3 bg-amber-50 text-amber-700 rounded-lg flex-shrink-0">
+            <div className="p-3 bg-amber-50 text-amber-700 rounded-lg shrink-0 flex items-center justify-center self-center">
               <AlertTriangle className="w-6 h-6" />
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Metric 3: Evidence Gaps */}
         <Card padding="none" className="border-slate-200 shadow-sm bg-white overflow-hidden">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex-1 min-w-0 pr-3">
+          <div className="p-4 flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider truncate">
                 Missing Evidence Gaps
               </p>
@@ -705,43 +705,41 @@ function EvidenceIntelligenceContent() {
                 {gaps.filter((g) => g.resolutionStatus === 'open').length} unfulfilled statutory items
               </p>
             </div>
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg flex-shrink-0">
+            <div className="p-3 bg-red-50 text-red-700 rounded-lg shrink-0 flex items-center justify-center self-center">
               <HelpCircle className="w-6 h-6" />
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Metric 4: Statutory Criteria Coverage */}
         <Card padding="none" className="border-slate-200 shadow-sm bg-white overflow-hidden">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex-1 min-w-0 pr-3">
-              <div className="flex items-center justify-between gap-1">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider truncate">
-                  Criteria Coverage
+          <div className="p-4 flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider truncate">
+                Criteria Coverage
+              </p>
+              <div className="flex items-baseline space-x-1.5 mt-1">
+                <p className="text-2xl font-bold text-[#091E42]">
+                  {mappings.length > 0 ? `${coveragePercentage}%` : '0%'}
                 </p>
-                <span className="text-xs font-bold text-[#172B4D] flex-shrink-0">
-                  {mappings.length > 0 ? `${coveragePercentage}%` : 'Not evaluated'}
+                <span className="text-xs font-medium text-slate-500 truncate">
+                  {mappings.length > 0
+                    ? `(${mappings.filter((m) => m.status === 'supported').length}/${mappings.length} met)`
+                    : 'Not evaluated'}
                 </span>
               </div>
-              <p className="text-2xl font-bold text-[#091E42] mt-1">
-                {mappings.length > 0 ? (
-                  `${mappings.filter((m) => m.status === 'supported').length} / ${mappings.length}`
-                ) : (
-                  <span className="text-sm font-normal text-slate-400">Run Analysis</span>
-                )}
-              </p>
               {/* Progress Bar */}
-              <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2">
+              <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
                 <div
                   className="bg-[#172B4D] h-1.5 rounded-full transition-all duration-500"
                   style={{ width: `${mappings.length > 0 ? coveragePercentage : 0}%` }}
                 />
               </div>
             </div>
-            <div className="p-3 bg-indigo-50 text-indigo-700 rounded-lg flex-shrink-0">
+            <div className="p-3 bg-indigo-50 text-indigo-700 rounded-lg shrink-0 flex items-center justify-center self-center">
               <Scale className="w-6 h-6" />
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
