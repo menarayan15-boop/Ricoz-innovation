@@ -32,11 +32,10 @@ export class LocalPrivateStorageProvider implements IStorageProvider {
   private uploadDir: string;
 
   constructor() {
-    this.uploadDir = path.resolve(
-      process.cwd(),
-      process.env.UPLOAD_DIR || 'uploads',
-      'documents'
-    );
+    const baseDir = process.env.UPLOAD_DIR || (process.env.VERCEL ? '/tmp/uploads' : 'uploads');
+    this.uploadDir = path.isAbsolute(baseDir)
+      ? path.join(baseDir, 'documents')
+      : path.resolve(process.cwd(), baseDir, 'documents');
     if (!fs.existsSync(this.uploadDir)) {
       fs.mkdirSync(this.uploadDir, { recursive: true });
     }

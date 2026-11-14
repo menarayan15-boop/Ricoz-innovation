@@ -33,7 +33,7 @@ export default function SettingsPage() {
               <span className="text-xs font-semibold text-[#172B4D] block">MongoDB Atlas Persistence</span>
               <span className="text-[11px] text-[#627D98]">Connected to cluster0.unoinay.mongodb.net</span>
             </div>
-            <Badge variant="success" size="sm">Active (Port 5001)</Badge>
+            <Badge variant="success" size="sm">Active (Connected)</Badge>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded">

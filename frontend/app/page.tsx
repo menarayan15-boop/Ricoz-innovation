@@ -88,7 +88,13 @@ export default function FoundationVerificationPage() {
     setIsVerifying(true);
 
     try {
-      await Promise.allSettled([verifyBackend(), verifyDatabase()]);
+      const backendOk = await verifyBackend();
+      if (backendOk) {
+        await verifyDatabase();
+      } else {
+        setDbStatus('failed');
+        setDbError('Backend API is currently unreachable. MongoDB status check is deferred until backend connection is established.');
+      }
       setLastVerified(new Date());
     } finally {
       setIsVerifying(false);
@@ -100,7 +106,7 @@ export default function FoundationVerificationPage() {
     handleReverify();
   }, []);
 
-  const activeApiUrl = typeof window !== 'undefined' ? getApiBaseUrl() : 'http://localhost:5001/api/v1';
+  const activeApiUrl = typeof window !== 'undefined' ? getApiBaseUrl() : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1');
 
   return (
     <div className="min-h-screen bg-[#F7F8FA] flex flex-col font-sans text-[#202938]">
@@ -203,7 +209,7 @@ export default function FoundationVerificationPage() {
                   </div>
                   <div>
                     <h2 className="text-base font-semibold text-[#172B4D]">Node.js Express Backend</h2>
-                    <p className="text-xs text-[#627D98]">REST API Service (Port 5001)</p>
+                    <p className="text-xs text-[#627D98]">REST API Service</p>
                   </div>
                 </div>
 
@@ -278,7 +284,7 @@ export default function FoundationVerificationPage() {
                     {backendError}
                   </p>
                   <p className="text-[11px] text-[#4A5568]">
-                    Ensure the Express server is running on port 5001 (`cd backend && npm run dev`).
+                    Ensure the Express API service is active and reachable at the configured API gateway.
                   </p>
                 </div>
               )}

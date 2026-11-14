@@ -91,7 +91,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
             <div className="flex items-center space-x-2">
               <Badge variant="navy" size="sm">
-                Live API 5001
+                Live API
               </Badge>
             </div>
           </div>

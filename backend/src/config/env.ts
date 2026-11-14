@@ -29,7 +29,7 @@ export const config = {
   },
   storage: {
     driver: process.env.STORAGE_DRIVER || 'local',
-    uploadDir: process.env.UPLOAD_DIR || './uploads',
+    uploadDir: process.env.UPLOAD_DIR || (process.env.VERCEL ? '/tmp/uploads' : './uploads'),
   },
   ai: {
     provider: process.env.AI_PROVIDER || 'openai',

@@ -58,7 +58,7 @@ function RegisterFormContent() {
       if (apiErr.statusCode === 503) {
         setError('Database connection error: Unable to reach MongoDB Atlas. Please try again shortly.');
       } else if (apiErr.statusCode === 0) {
-        setError('Network error: Unable to reach backend server on port 5001. Please check if the API is running.');
+        setError('Network error: Unable to reach backend server. Please verify the API gateway connection.');
       } else if (apiErr.message) {
         setError(apiErr.message);
       } else {

@@ -24,15 +24,30 @@ export class ApiError extends Error {
 }
 
 export function getApiBaseUrl(): string {
+  // 1. Explicitly configured API URL via environment variable
   if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
   }
+
+  // 2. Client-side browser execution
   if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol;
-    const hostname = window.location.hostname || 'localhost';
-    return `${protocol}//${hostname}:5001/api/v1`;
+    const hostname = window.location.hostname;
+    // Local development loopback
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') {
+      return 'http://localhost:5001/api/v1';
+    }
+    // Production on deployed host (Vercel, custom domain) -> relative /api/v1 (rewritten by Next.js or same origin)
+    return `${window.location.origin}/api/v1`;
   }
-  return 'http://localhost:5001/api/v1';
+
+  // 3. Server-side rendering (SSR) fallback
+  if (process.env.BACKEND_URL) {
+    return `${process.env.BACKEND_URL.replace(/\/+$/, '')}/api/v1`;
+  }
+
+  return process.env.NODE_ENV === 'production'
+    ? '/api/v1'
+    : 'http://localhost:5001/api/v1';
 }
 
 export async function request<T>(

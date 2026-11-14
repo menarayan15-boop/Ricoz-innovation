@@ -131,7 +131,7 @@ function LoginFormContent() {
       if (apiErr.statusCode === 503) {
         setError('Database service unavailable: The backend cannot reach MongoDB Atlas. Please try again shortly.');
       } else if (apiErr.statusCode === 0) {
-        setError('Network error: Unable to reach backend server on port 5001. Please ensure the backend is running.');
+        setError('Network error: Unable to reach backend server. Please check your internet connection or verify the API service.');
       } else if (apiErr.message) {
         setError(apiErr.message);
       } else {
