@@ -2,23 +2,22 @@
 const nextConfig = {
   reactStrictMode: true,
   async rewrites() {
-    // Determine the backend target URL from environment variables
+    // Determine the backend target URL:
+    // 1. BACKEND_URL environment variable
+    // 2. Extracted from NEXT_PUBLIC_API_URL
+    // 3. Production Vercel backend deployment: https://ricoz-backend.vercel.app
     const targetUrl =
       process.env.BACKEND_URL ||
       (process.env.NEXT_PUBLIC_API_URL
         ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, '')
-        : null);
+        : 'https://ricoz-backend.vercel.app');
 
-    if (targetUrl && !targetUrl.includes('localhost:3001')) {
-      return [
-        {
-          source: '/api/v1/:path*',
-          destination: `${targetUrl}/api/v1/:path*`,
-        },
-      ];
-    }
-
-    return [];
+    return [
+      {
+        source: '/api/v1/:path*',
+        destination: `${targetUrl}/api/v1/:path*`,
+      },
+    ];
   },
 };
 

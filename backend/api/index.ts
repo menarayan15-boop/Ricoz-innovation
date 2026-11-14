@@ -13,6 +13,11 @@ let isConnected = false;
 
 // Serverless Handler for Vercel
 export default async function handler(req: any, res: any) {
+  // If Vercel serverless rewrite changed req.url to /api/index, restore the true requested path
+  if (req.originalUrl && req.url !== req.originalUrl) {
+    req.url = req.originalUrl;
+  }
+
   // Connect to persistent MongoDB if not yet connected
   if (!isConnected) {
     try {
@@ -20,7 +25,7 @@ export default async function handler(req: any, res: any) {
       isConnected = true;
     } catch (err: any) {
       logger.error('[Serverless] MongoDB connection error:', err?.message || err);
-      // Do not throw here so that /api/v1/health can still return detailed error diagnostics
+      // Non-blocking: continue so health endpoint can return detailed diagnostics
     }
   }
 
