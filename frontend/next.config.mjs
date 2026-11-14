@@ -10,7 +10,7 @@ const nextConfig = {
       process.env.BACKEND_URL ||
       (process.env.NEXT_PUBLIC_API_URL
         ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, '')
-        : 'https://ricoz-backend.vercel.app');
+        : 'https://ricoz-backend-sable.vercel.app');
 
     return [
       {

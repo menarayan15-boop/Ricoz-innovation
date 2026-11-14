@@ -6,9 +6,25 @@ import { config } from './config/env.js';
 import routes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 import { requestLogger } from './middleware/requestLogger.middleware.js';
+import { connectDatabase } from './config/database.js';
+
+let isConnected = false;
 
 export const createApp = (): Express => {
   const app = express();
+
+  // Ensure persistent MongoDB connection in serverless or container environments
+  app.use(async (req, res, next) => {
+    if (!isConnected && config.nodeEnv !== 'test') {
+      try {
+        await connectDatabase();
+        isConnected = true;
+      } catch (err) {
+        // Non-blocking: database status is reported in detail by /api/v1/health/db
+      }
+    }
+    next();
+  });
 
   // Security Middleware
   app.use(
@@ -76,3 +92,7 @@ export const createApp = (): Express => {
 
   return app;
 };
+
+const defaultApp = createApp();
+export default defaultApp;
+
