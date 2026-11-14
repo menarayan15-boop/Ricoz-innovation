@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Debug / logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs/
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+data/
+backend/data/
+*.wt
+*.turtle
+
+# Coverage directory
+coverage/
+*.lcov
+
+# Uploaded user files / temp files
+uploads/
+temp/
+storage/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
