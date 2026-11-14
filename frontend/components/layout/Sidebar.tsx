@@ -29,17 +29,32 @@ import { apiClient } from '@/services/apiClient';
 interface SidebarProps {
   currentRole?: UserRole;
   onRoleChange?: (role: UserRole) => void;
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   currentRole = 'applicant',
   onRoleChange,
+  mobileOpen: controlledMobileOpen,
+  onMobileOpenChange,
 }) => {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [internalMobileOpen, setInternalMobileOpen] = useState(false);
+  const isMobileOpen = controlledMobileOpen !== undefined ? controlledMobileOpen : internalMobileOpen;
+
+  const setMobileOpen = (open: boolean) => {
+    if (onMobileOpenChange) {
+      onMobileOpenChange(open);
+    } else {
+      setInternalMobileOpen(open);
+    }
+  };
+
   const [role, setRole] = useState<UserRole>(currentRole);
   const [userName, setUserName] = useState<string>('Alex Morgan');
   const [userEmail, setUserEmail] = useState<string>('');
+  const [hasToken, setHasToken] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -60,6 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       // Synchronize authenticated profile with real backend session
       const token = localStorage.getItem('auth_token');
+      setHasToken(Boolean(token));
       if (token) {
         apiClient
           .getProfile()
@@ -78,6 +94,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
       }
     }
   }, [onRoleChange]);
+
+  // Handle Escape key to close mobile drawer
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileOpen) {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileOpen]);
+
+  // Lock body scroll when mobile drawer is open
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileOpen]);
 
   const handleLogout = async () => {
     try {
@@ -170,9 +209,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[#172B4D] text-white select-none">
       {/* Brand Header */}
-      <div className="h-16 flex items-center px-6 border-b border-[#243B53] justify-between">
-        <Link href="/" className="flex items-center space-x-3 group">
-          <div className="w-8 h-8 rounded bg-[#426B91] flex items-center justify-center text-white font-bold text-sm shadow-sm">
+      <div className="h-16 flex items-center px-4 sm:px-6 border-b border-[#243B53] justify-between">
+        <Link
+          href="/"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center space-x-3 group"
+        >
+          <div className="w-8 h-8 rounded bg-[#426B91] flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:bg-[#527d9f] transition-colors">
             <Scale className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -184,14 +227,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
           </div>
         </Link>
-        {mobileOpen && (
-          <button
-            onClick={() => setMobileOpen(false)}
-            className="md:hidden p-1 text-[#9FB3C8] hover:text-white"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden p-2 text-[#9FB3C8] hover:text-white hover:bg-[#243B53] rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Close navigation menu"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Role Switcher (Preview Control) */}
@@ -212,7 +254,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 key={r}
                 onClick={() => handleRoleSelect(r)}
                 className={cn(
-                  'px-2 py-1 rounded text-left text-[11px] font-medium transition-colors capitalize',
+                  'px-2 py-1.5 rounded text-left text-[11px] font-medium transition-colors capitalize min-h-[36px]',
                   role === r
                     ? 'bg-[#426B91] text-white shadow-xs font-semibold'
                     : 'text-[#9FB3C8] hover:bg-[#243B53] hover:text-white'
@@ -239,9 +281,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'flex items-center justify-between px-3 py-2 rounded-md text-xs font-medium transition-colors',
+                'flex items-center justify-between px-3 py-2.5 rounded-md text-xs font-medium transition-colors min-h-[40px]',
                 isActive
-                  ? 'bg-[#243B53] text-white border-l-3 border-[#426B91] pl-2.5'
+                  ? 'bg-[#243B53] text-white border-l-3 border-[#426B91] pl-2.5 font-semibold'
                   : 'text-[#BCCCDC] hover:bg-[#243B53]/60 hover:text-white'
               )}
             >
@@ -252,7 +294,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {item.badge && (
                 <span
                   className={cn(
-                    'px-1.5 py-0.2 rounded text-[10px] font-semibold',
+                    'px-1.5 py-0.5 rounded text-[10px] font-semibold',
                     item.badge === 'Casework'
                       ? 'bg-[#B78103] text-white'
                       : 'bg-[#426B91] text-white'
@@ -265,6 +307,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
           );
         })}
       </div>
+
+      {/* Quick Auth Links for Unauthenticated or Preview Visitors */}
+      {!hasToken && (
+        <div className="p-3 bg-[#0F1B2D] border-t border-[#243B53] space-y-1.5">
+          <p className="text-[10px] text-[#9FB3C8] uppercase tracking-wider font-semibold">
+            Authentication
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className="py-2 text-center text-xs font-semibold bg-[#243B53] text-white rounded hover:bg-[#426B91] transition-colors min-h-[40px] flex items-center justify-center"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              onClick={() => setMobileOpen(false)}
+              className="py-2 text-center text-xs font-semibold bg-[#426B91] text-white rounded hover:bg-[#172B4D] transition-colors min-h-[40px] flex items-center justify-center"
+            >
+              Sign Up
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* User Footer Profile */}
       <div className="p-4 border-t border-[#243B53] bg-[#0F1B2D]">
@@ -290,7 +357,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={handleLogout}
             title="Sign Out"
-            className="p-1.5 text-[#9FB3C8] hover:text-white hover:bg-[#243B53] rounded transition-colors cursor-pointer"
+            className="p-2 text-[#9FB3C8] hover:text-white hover:bg-[#243B53] rounded transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+            aria-label="Sign out"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -301,34 +369,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Mobile Menu Trigger Button */}
-      <div className="md:hidden fixed top-3 left-4 z-50">
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-md bg-[#172B4D] text-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#426B91]"
-          aria-label="Open workspace menu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-      </div>
-
       {/* Desktop Sidebar (Permanent) */}
       <aside className="hidden md:flex flex-col w-64 shrink-0 h-screen sticky top-0 z-30">
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer (Overlay) */}
-      {mobileOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#172B4D]">
-            {sidebarContent}
-          </div>
+      {/* Fallback Standalone Mobile Menu Trigger Button (only if not controlled by DashboardLayout) */}
+      {controlledMobileOpen === undefined && (
+        <div className="md:hidden fixed top-3 left-4 z-50">
+          <button
+            onClick={() => setMobileOpen(!isMobileOpen)}
+            className="p-2.5 rounded-md bg-[#172B4D] text-white shadow-md focus:outline-none focus:ring-2 focus:ring-[#426B91] min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label="Open workspace menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
       )}
+
+      {/* Mobile Drawer (Smooth Slide-In Overlay) */}
+      <div
+        className={cn(
+          'md:hidden fixed inset-0 z-50 transition-all duration-300',
+          isMobileOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none'
+        )}
+        aria-hidden={!isMobileOpen}
+      >
+        {/* Backdrop */}
+        <div
+          className={cn(
+            'fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300',
+            isMobileOpen ? 'opacity-100' : 'opacity-0'
+          )}
+          onClick={() => setMobileOpen(false)}
+        />
+        {/* Drawer panel */}
+        <div
+          className={cn(
+            'relative flex flex-col max-w-xs w-full h-full bg-[#172B4D] shadow-2xl transform transition-transform duration-300 ease-in-out',
+            isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+          )}
+        >
+          {sidebarContent}
+        </div>
+      </div>
     </>
   );
 };

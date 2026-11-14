@@ -516,20 +516,20 @@ function EvidenceIntelligenceContent() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row flex-wrap sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
           {/* Petition Dropdown */}
-          <div className="flex items-center space-x-2">
-            <label htmlFor="petition-select" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <div className="flex items-center space-x-2 w-full sm:w-auto">
+            <label htmlFor="petition-select" className="text-xs font-semibold text-slate-500 uppercase tracking-wider shrink-0">
               Petition:
             </label>
             {applications.length === 0 ? (
-              <div className="flex items-center space-x-2">
-                <span className="text-xs text-slate-400 bg-slate-100 px-3 py-1.5 rounded border border-slate-200">
+              <div className="flex items-center space-x-2 w-full sm:w-auto">
+                <span className="text-xs text-slate-400 bg-slate-100 px-3 py-2 rounded border border-slate-200 flex-1 sm:flex-none">
                   No Petitions Found
                 </span>
                 <Link
                   href="/dashboard/applications/create"
-                  className="inline-flex items-center text-xs font-semibold bg-[#172B4D] text-white px-2.5 py-1.5 rounded shadow-sm hover:bg-[#091E42]"
+                  className="inline-flex items-center justify-center text-xs font-semibold bg-[#172B4D] text-white px-3 py-2 rounded shadow-sm hover:bg-[#091E42] min-h-[40px]"
                 >
                   <PlusCircle className="w-3.5 h-3.5 mr-1" />
                   <span>Create</span>
@@ -540,7 +540,7 @@ function EvidenceIntelligenceContent() {
                 id="petition-select"
                 value={selectedAppId}
                 onChange={(e) => setSelectedAppId(e.target.value)}
-                className="bg-white border border-slate-300 rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#172B4D]"
+                className="bg-white border border-slate-300 rounded-md px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#172B4D] w-full sm:w-auto min-h-[40px]"
               >
                 <option value="" disabled>
                   Select a Visa Petition...
@@ -555,11 +555,11 @@ function EvidenceIntelligenceContent() {
           </div>
 
           {/* Action: Run Analysis */}
-          <div className="relative group">
+          <div className="relative group w-full sm:w-auto">
             <Button
               onClick={handleRunAnalysis}
               disabled={isAnalyzing || !selectedAppId || availableDocs.length < 2}
-              className={`flex items-center space-x-2 shadow-sm ${
+              className={`w-full sm:w-auto min-h-[40px] flex items-center justify-center space-x-2 shadow-sm ${
                 availableDocs.length < 2 && !isAnalyzing
                   ? 'bg-slate-300 text-slate-500 cursor-not-allowed hover:bg-slate-300'
                   : 'bg-[#172B4D] hover:bg-[#091E42] text-white'
@@ -580,7 +580,7 @@ function EvidenceIntelligenceContent() {
 
             {/* Explanatory Tooltip when prerequisites are not met */}
             {availableDocs.length < 2 && !isAnalyzing && selectedAppId && (
-              <div className="absolute right-0 top-full mt-1.5 hidden group-hover:block z-30 bg-[#091E42] text-white text-[11px] p-2.5 rounded shadow-lg w-64">
+              <div className="absolute left-0 sm:right-0 sm:left-auto top-full mt-1.5 hidden group-hover:block z-30 bg-[#091E42] text-white text-[11px] p-2.5 rounded shadow-lg w-64 max-w-xs">
                 <p className="font-semibold text-amber-300">Prerequisite Notice:</p>
                 <p className="mt-0.5">
                   Cross-document comparison requires at least 2 uploaded exhibits. This petition currently has{' '}
@@ -601,7 +601,7 @@ function EvidenceIntelligenceContent() {
             variant="outline"
             onClick={handleOpenReport}
             disabled={!selectedAppId}
-            className="border-slate-300 text-slate-700 hover:bg-slate-50 flex items-center space-x-1"
+            className="w-full sm:w-auto min-h-[40px] justify-center border-slate-300 text-slate-700 hover:bg-slate-50 flex items-center space-x-1"
           >
             <Printer className="w-4 h-4 mr-1 text-slate-500" />
             <span>Dossier Report</span>
@@ -895,7 +895,7 @@ function EvidenceIntelligenceContent() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
+                  <table className="w-full min-w-[700px] text-left text-sm">
                     <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase border-b border-slate-200">
                       <tr>
                         <th className="py-3 px-4">Run ID</th>
@@ -1169,7 +1169,7 @@ function EvidenceIntelligenceContent() {
                 <p className="text-xs text-slate-400 mt-1">Run an analysis to generate the attribute matrix.</p>
               </div>
             ) : (
-              <table className="w-full text-left text-xs">
+              <table className="w-full min-w-[640px] text-left text-xs">
                 <thead className="bg-slate-50 text-slate-500 font-semibold uppercase border-b border-slate-200">
                   <tr>
                     <th className="py-3 px-4">Evidentiary Domain</th>

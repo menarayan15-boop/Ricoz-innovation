@@ -652,51 +652,98 @@ function ApplicationWizardContent() {
 
       {/* Stepper Progress Bar (6 Steps) */}
       {!submittedApplication && (
-        <div className="bg-white border border-[#E2E8F0] rounded-lg p-4 shadow-sm overflow-x-auto">
-          <div className="flex items-center justify-between min-w-[620px]">
-            {[
-              { num: 1, label: 'Visa Category' },
-              { num: 2, label: 'Applicant Details' },
-              { num: 3, label: 'Education & Jobs' },
-              { num: 4, label: 'Visa Specifics' },
-              { num: 5, label: 'Evidence Checklist' },
-              { num: 6, label: 'Review & Save' },
-            ].map((step) => {
-              const isActive = currentStep === step.num;
-              const isPast = currentStep > step.num;
+        <>
+          {/* Mobile Step Banner (< sm) */}
+          <div className="sm:hidden bg-white border border-[#E2E8F0] rounded-lg p-3.5 shadow-sm space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#172B4D]">
+                Step {currentStep} of 6:{' '}
+                {[
+                  'Visa Category',
+                  'Applicant Details',
+                  'Education & Jobs',
+                  'Visa Specifics',
+                  'Evidence Checklist',
+                  'Review & Save',
+                ][currentStep - 1]}
+              </span>
+              <span className="text-[11px] font-semibold text-[#426B91]">
+                {Math.round((currentStep / 6) * 100)}%
+              </span>
+            </div>
+            <div className="w-full bg-[#E2E8F0] h-2 rounded-full overflow-hidden">
+              <div
+                className="bg-[#172B4D] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${(currentStep / 6) * 100}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between pt-1 text-xs">
+              <button
+                type="button"
+                disabled={currentStep === 1}
+                onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
+                className="py-1 px-2 font-medium text-[#426B91] disabled:text-[#CBD5E1] rounded hover:bg-[#F0F4F8]"
+              >
+                ← Previous
+              </button>
+              <button
+                type="button"
+                disabled={currentStep === 6}
+                onClick={() => setCurrentStep((prev) => Math.min(6, prev + 1))}
+                className="py-1 px-2 font-semibold text-[#172B4D] disabled:text-[#CBD5E1] rounded hover:bg-[#F0F4F8]"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
 
-              return (
-                <div key={step.num} className="flex items-center space-x-2">
-                  <div
-                    onClick={() => setCurrentStep(step.num)}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs cursor-pointer transition-all ${
-                      isActive
-                        ? 'bg-[#172B4D] text-white ring-4 ring-[#172B4D]/10'
-                        : isPast
-                        ? 'bg-[#2E7D32] text-white'
-                        : 'bg-[#F0F4F8] text-[#829AB1] hover:bg-[#D9E2EC]'
-                    }`}
-                  >
-                    {isPast ? <Check className="w-3.5 h-3.5" /> : step.num}
-                  </div>
-                  <div>
-                    <span
+          {/* Desktop / Tablet Stepper Progress Bar (>= sm) */}
+          <div className="hidden sm:block bg-white border border-[#E2E8F0] rounded-lg p-4 shadow-sm overflow-x-auto">
+            <div className="flex items-center justify-between min-w-[620px]">
+              {[
+                { num: 1, label: 'Visa Category' },
+                { num: 2, label: 'Applicant Details' },
+                { num: 3, label: 'Education & Jobs' },
+                { num: 4, label: 'Visa Specifics' },
+                { num: 5, label: 'Evidence Checklist' },
+                { num: 6, label: 'Review & Save' },
+              ].map((step) => {
+                const isActive = currentStep === step.num;
+                const isPast = currentStep > step.num;
+
+                return (
+                  <div key={step.num} className="flex items-center space-x-2">
+                    <div
                       onClick={() => setCurrentStep(step.num)}
-                      className={`text-xs font-semibold cursor-pointer block whitespace-nowrap ${
-                        isActive ? 'text-[#172B4D]' : isPast ? 'text-[#2E7D32]' : 'text-[#829AB1]'
+                      className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs cursor-pointer transition-all ${
+                        isActive
+                          ? 'bg-[#172B4D] text-white ring-4 ring-[#172B4D]/10'
+                          : isPast
+                          ? 'bg-[#2E7D32] text-white'
+                          : 'bg-[#F0F4F8] text-[#829AB1] hover:bg-[#D9E2EC]'
                       }`}
                     >
-                      {step.label}
-                    </span>
+                      {isPast ? <Check className="w-3.5 h-3.5" /> : step.num}
+                    </div>
+                    <div>
+                      <span
+                        onClick={() => setCurrentStep(step.num)}
+                        className={`text-xs font-semibold cursor-pointer block whitespace-nowrap ${
+                          isActive ? 'text-[#172B4D]' : isPast ? 'text-[#2E7D32]' : 'text-[#829AB1]'
+                        }`}
+                      >
+                        {step.label}
+                      </span>
+                    </div>
+                    {step.num < 6 && (
+                      <div className="w-6 md:w-10 h-px bg-[#CBD5E1] mx-1 shrink-0" />
+                    )}
                   </div>
-                  {step.num < 6 && (
-                    <div className="w-6 md:w-10 h-px bg-[#CBD5E1] mx-1 shrink-0" />
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* STEP 1: Visa Category Selection */}

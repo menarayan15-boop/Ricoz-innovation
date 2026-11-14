@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Scale, Lock, Mail, ArrowRight, AlertCircle, Eye, KeyRound, CheckCircle2, X } from 'lucide-react';
+import { Scale, Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, KeyRound, CheckCircle2, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -16,6 +16,7 @@ function LoginFormContent() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
@@ -211,25 +212,25 @@ function LoginFormContent() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-3">
-              <div className="space-y-1">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-[#172B4D]">
                   Work or Legal Email
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-[#829AB1] absolute left-3 top-2.5 pointer-events-none" />
+                  <Mail className="w-4 h-4 text-[#829AB1] absolute left-3 top-3.5 pointer-events-none" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@company.com"
                     autoComplete="email"
-                    className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-[#CBD5E1] rounded-md text-[#202938] focus:outline-none focus:ring-1 focus:ring-[#172B4D]"
+                    className="w-full pl-9 pr-3 py-2.5 min-h-[44px] text-sm bg-white border border-[#CBD5E1] rounded-md text-[#202938] focus:outline-none focus:ring-2 focus:ring-[#172B4D] transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <label className="block text-xs font-semibold text-[#172B4D]">
                     Password
@@ -237,28 +238,36 @@ function LoginFormContent() {
                   <button
                     type="button"
                     onClick={() => handleOpenReset(email)}
-                    className="text-[11px] text-[#426B91] hover:underline cursor-pointer"
+                    className="text-xs text-[#426B91] hover:underline cursor-pointer py-1"
                   >
                     Forgot password?
                   </button>
                 </div>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-[#829AB1] absolute left-3 top-2.5 pointer-events-none" />
+                  <Lock className="w-4 h-4 text-[#829AB1] absolute left-3 top-3.5 pointer-events-none" />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••••••"
+                    placeholder="Enter password"
                     autoComplete="current-password"
-                    className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-[#CBD5E1] rounded-md text-[#202938] focus:outline-none focus:ring-1 focus:ring-[#172B4D]"
+                    className="w-full pl-9 pr-11 py-2.5 min-h-[44px] text-sm bg-white border border-[#CBD5E1] rounded-md text-[#202938] focus:outline-none focus:ring-2 focus:ring-[#172B4D] transition-colors"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2.5 top-2.5 p-1 text-[#829AB1] hover:text-[#172B4D] focus:outline-none min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 
               <Button
                 type="submit"
                 size="md"
-                className="w-full justify-center space-x-1.5 mt-2"
+                className="w-full justify-center space-x-1.5 mt-2 min-h-[44px] text-sm font-semibold"
                 isLoading={isLoading}
               >
                 <span>Sign In to Continue</span>

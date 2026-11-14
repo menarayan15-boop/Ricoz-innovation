@@ -606,7 +606,7 @@ function DocumentsContent() {
 
         {documents.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full min-w-[650px] text-left border-collapse text-xs">
               <thead>
                 <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[11px] font-bold text-[#486581] uppercase tracking-wider">
                   <th className="py-3 px-4">Exhibit Name</th>

@@ -432,8 +432,8 @@ function AssistantContent() {
           ========================================================================= */}
       {activeMode === 'chat' && (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[600px]">
-          {/* Left Column: Conversations Drawer (1/4) */}
-          <div className="space-y-4">
+          {/* Left Column (Desktop) / Bottom Drawer (Mobile): Conversations & Evidence Docs (1/4) */}
+          <div className="order-2 lg:order-1 lg:col-span-1 space-y-4">
             <Button
               onClick={handleNewConversation}
               className="w-full justify-center space-x-1.5 shadow-xs"
@@ -517,8 +517,8 @@ function AssistantContent() {
             </Card>
           </div>
 
-          {/* Right Column: Chat Stream & Composer (3/4) */}
-          <div className="lg:col-span-3 flex flex-col bg-white rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden h-[650px]">
+          {/* Right Column (Desktop) / Top Section (Mobile): Chat Stream & Composer (3/4) */}
+          <div className="order-1 lg:order-2 lg:col-span-3 flex flex-col bg-white rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden h-[540px] sm:h-[650px]">
             {/* Chat Messages Viewport */}
             <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-[#F8FAFC]">
               {messages.length === 0 ? (
@@ -622,23 +622,23 @@ function AssistantContent() {
             </div>
 
             {/* Message Composer */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-[#E2E8F0] flex items-center space-x-2">
+            <form onSubmit={handleSendMessage} className="p-2.5 sm:p-3 bg-white border-t border-[#E2E8F0] flex items-center space-x-2">
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Ask about Matter of Dhanasar, prevailing wages, or your uploaded evidence..."
                 disabled={isSending}
-                className="flex-1 px-4 py-2 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#202938] focus:outline-none focus:ring-1 focus:ring-[#172B4D]"
+                className="flex-1 px-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm bg-[#F8FAFC] border border-[#CBD5E1] rounded-lg text-[#202938] focus:outline-none focus:ring-2 focus:ring-[#172B4D] transition-colors"
               />
               <Button
                 type="submit"
                 size="md"
                 disabled={isSending || !inputText.trim()}
-                className="space-x-1.5 shrink-0"
+                className="space-x-1.5 shrink-0 min-h-[44px] px-3.5 sm:px-4 font-semibold"
               >
-                <Send className="w-3.5 h-3.5" />
-                <span>Send</span>
+                <Send className="w-4 h-4" />
+                <span className="hidden sm:inline">Send</span>
               </Button>
             </form>
           </div>

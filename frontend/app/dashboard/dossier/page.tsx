@@ -252,12 +252,12 @@ export default function DossierBuilderPage() {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 shrink-0">
-                <Button variant="outline" size="sm" className="text-xs space-x-1">
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0 pt-2 sm:pt-0">
+                <Button variant="outline" size="sm" className="text-xs space-x-1 flex-1 sm:flex-none justify-center">
                   <Printer className="w-3.5 h-3.5" />
                   <span>Index Sheet</span>
                 </Button>
-                <Button size="sm" className="text-xs space-x-1 bg-[#172B4D] hover:bg-[#0F1B2D]">
+                <Button size="sm" className="text-xs space-x-1 bg-[#172B4D] hover:bg-[#0F1B2D] flex-1 sm:flex-none justify-center">
                   <Download className="w-3.5 h-3.5" />
                   <span>Download PDF Bundle</span>
                 </Button>

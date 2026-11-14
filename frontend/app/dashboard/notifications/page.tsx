@@ -30,7 +30,7 @@ export default function NotificationsPage() {
 
       <div className="space-y-3">
         {notifications.map((n, idx) => (
-          <div key={idx} className="p-4 bg-white rounded-lg border border-[#E2E8F0] shadow-sm flex items-start justify-between">
+          <div key={idx} className="p-4 bg-white rounded-lg border border-[#E2E8F0] shadow-sm flex items-start justify-between gap-3">
             <div className="flex items-start space-x-3">
               <div className="p-2 rounded bg-[#F0F4F8] text-[#172B4D] mt-0.5">
                 <Bell className="w-4 h-4" />
