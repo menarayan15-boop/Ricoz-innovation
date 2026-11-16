@@ -67,9 +67,6 @@ export const createApp = (): Express => {
   // Base API v1 Routing
   app.use('/api/v1', routes);
 
-  // Root Routing (fallback for serverless gateways that strip /api/v1 prefix)
-  app.use('/', routes);
-
   // Root Welcome route & diagnostic
   app.get(['/', '/api', '/api/index'], (req, res) => {
     res.status(200).json({
@@ -83,6 +80,9 @@ export const createApp = (): Express => {
       },
     });
   });
+
+  // Root Routing (fallback for serverless gateways that strip /api/v1 prefix)
+  app.use('/', routes);
 
   // 404 handler
   app.use(notFoundHandler);

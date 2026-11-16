@@ -534,3 +534,121 @@ export interface EvidenceReport {
   statutoryCriteria: Array<{ criterion: string; prong?: string; status: string; mappedExhibitCount: number }>;
   auditNotes: string;
 }
+
+// =========================================================================
+// PHASE 8: AI-POWERED DOSSIER AUTOMATION & CASE READINESS TYPES
+// =========================================================================
+
+export type DossierStatus =
+  | 'draft'
+  | 'pending_review'
+  | 'changes_requested'
+  | 'approved'
+  | 'finalized';
+
+export interface ReadinessBreakdownItem {
+  score: number;
+  max: number;
+  satisfied: boolean;
+  details: string;
+}
+
+export interface CaseReadinessScore {
+  overallScore: number;
+  breakdown: {
+    requiredDocsAvailable: ReadinessBreakdownItem;
+    evidenceVerification: ReadinessBreakdownItem;
+    missingEvidence: ReadinessBreakdownItem;
+    unresolvedInconsistencies: ReadinessBreakdownItem;
+    attorneyReview: ReadinessBreakdownItem;
+  };
+  formulaExplanation: string;
+  scoringVersion: string;
+  calculatedAt: string;
+  disclaimer: string;
+}
+
+export interface AiCaseSummary {
+  overview: string;
+  evidenceSummary: string;
+  documentReferences: Array<{
+    documentId: string;
+    title: string;
+    exhibitCode: string;
+    category: string;
+    verifiedFactsCount: number;
+  }>;
+  identifiedInconsistencies: Array<{
+    findingId: string;
+    title: string;
+    severity: string;
+    reviewStatus: string;
+  }>;
+  outstandingRequirements: string[];
+  suggestedReviewActions: string[];
+  generatedAt: string;
+  isEditedByHuman: boolean;
+  editedBy?: string;
+  editedAt?: string;
+}
+
+export interface DossierSectionRecord {
+  key: string;
+  title: string;
+  pageOffset: number;
+  content: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface DossierRecord {
+  _id: string;
+  dossierId: string;
+  applicationId: string;
+  createdBy: string;
+  version: number;
+  status: DossierStatus;
+  visaCategory: string;
+  targetFilingDate?: string;
+  readinessScore: CaseReadinessScore;
+  aiCaseSummary: AiCaseSummary;
+  sections: DossierSectionRecord[];
+  batesNumbering: {
+    prefix: string;
+    startNumber: number;
+    endNumber: number;
+    totalCount: number;
+  };
+  attorneyReview: {
+    reviewerId?: string;
+    reviewerName?: string;
+    reviewerRole?: string;
+    reviewedAt?: string;
+    decision?: 'approved' | 'changes_requested' | 'rejected';
+    comments?: string;
+    requestedEvidence?: string[];
+  };
+  auditHistory: Array<{
+    action: string;
+    performedBy: string;
+    userRole: string;
+    timestamp: string;
+    notes?: string;
+    version: number;
+  }>;
+  pdfExport?: {
+    generatedAt: string;
+    pageCount: number;
+    fileSize: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DossierHistoryItem {
+  dossierId: string;
+  version: number;
+  status: DossierStatus;
+  readinessScore: number;
+  createdAt: string;
+  updatedAt: string;
+}

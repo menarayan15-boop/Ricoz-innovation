@@ -7,6 +7,7 @@ import dashboardRoutes from './dashboard.routes.js';
 import documentRoutes from './document.routes.js';
 import aiRoutes from './ai.routes.js';
 import evidenceRoutes from './evidence.routes.js';
+import dossierRoutes from './dossier.routes.js';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/documents', documentRoutes);
 router.use('/ai', aiRoutes);
 router.use('/admin', adminRoutes);
 router.use('/', evidenceRoutes);
+router.use('/', dossierRoutes);
 
 export default router;

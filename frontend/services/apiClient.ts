@@ -989,4 +989,122 @@ export const apiClient = {
       report: import('@/types').EvidenceReport;
     }>(`/applications/${applicationId}/evidence/report`, { method: 'GET' });
   },
+
+  // =========================================================================
+  // PHASE 8: AI-POWERED DOSSIER AUTOMATION & CASE READINESS CLIENT METHODS
+  // =========================================================================
+
+  generateDossier: async (
+    applicationId: string
+  ): Promise<{
+    success: boolean;
+    message: string;
+    dossier: import('@/types').DossierRecord;
+  }> => {
+    return request<{
+      success: boolean;
+      message: string;
+      dossier: import('@/types').DossierRecord;
+    }>(`/applications/${applicationId}/dossier/generate`, {
+      method: 'POST',
+    });
+  },
+
+  getDossier: async (
+    applicationId: string
+  ): Promise<{
+    success: boolean;
+    dossier: import('@/types').DossierRecord | null;
+    history: import('@/types').DossierHistoryItem[];
+  }> => {
+    return request<{
+      success: boolean;
+      dossier: import('@/types').DossierRecord | null;
+      history: import('@/types').DossierHistoryItem[];
+    }>(`/applications/${applicationId}/dossier`, { method: 'GET' });
+  },
+
+  getReadinessScore: async (
+    applicationId: string
+  ): Promise<{
+    success: boolean;
+    readinessScore: import('@/types').CaseReadinessScore;
+  }> => {
+    return request<{
+      success: boolean;
+      readinessScore: import('@/types').CaseReadinessScore;
+    }>(`/applications/${applicationId}/dossier/readiness`, { method: 'GET' });
+  },
+
+  getDossierById: async (
+    dossierId: string
+  ): Promise<{
+    success: boolean;
+    dossier: import('@/types').DossierRecord;
+  }> => {
+    return request<{
+      success: boolean;
+      dossier: import('@/types').DossierRecord;
+    }>(`/dossier/${dossierId}`, { method: 'GET' });
+  },
+
+  editAiSummary: async (
+    dossierId: string,
+    payload: { overview: string; evidenceSummary: string }
+  ): Promise<{
+    success: boolean;
+    message: string;
+    dossier: import('@/types').DossierRecord;
+  }> => {
+    return request<{
+      success: boolean;
+      message: string;
+      dossier: import('@/types').DossierRecord;
+    }>(`/dossier/${dossierId}/summary`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  reviewDossier: async (
+    dossierId: string,
+    payload: {
+      decision: 'approved' | 'changes_requested' | 'rejected';
+      comments: string;
+      requestedEvidence?: string[];
+    }
+  ): Promise<{
+    success: boolean;
+    message: string;
+    dossier: import('@/types').DossierRecord;
+  }> => {
+    return request<{
+      success: boolean;
+      message: string;
+      dossier: import('@/types').DossierRecord;
+    }>(`/dossier/${dossierId}/review`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  finalizeDossier: async (
+    dossierId: string
+  ): Promise<{
+    success: boolean;
+    message: string;
+    dossier: import('@/types').DossierRecord;
+  }> => {
+    return request<{
+      success: boolean;
+      message: string;
+      dossier: import('@/types').DossierRecord;
+    }>(`/dossier/${dossierId}/finalize`, {
+      method: 'POST',
+    });
+  },
+
+  getDossierPdfUrl: (dossierId: string): string => {
+    return `${getApiBaseUrl()}/dossier/${dossierId}/pdf`;
+  },
 };

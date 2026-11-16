@@ -14,7 +14,7 @@ try {
 
 dotenv.config({ path: path.resolve(process.cwd(), 'backend/.env') });
 
-const BACKEND_URL = 'http://localhost:5001/api/v1';
+const BACKEND_URL = process.env.TEST_BACKEND_URL || 'http://localhost:5001/api/v1';
 
 function createReadablePdfBuffer(text) {
   const cleanText = text.replace(/[\\()\r\n]/g, ' ');
